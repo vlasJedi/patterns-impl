@@ -9,7 +9,7 @@ public class Main {
 //        AbstractDog dog2 = new Jhonny();
 //        dog2.setDogTraining(new SwimmingTrainedDog());
 //        dog2.bark();
-        THanoi hanoi = new THanoi(4);
+        THanoi hanoi = new THanoi(3);
         hanoi.start();
     }
 }

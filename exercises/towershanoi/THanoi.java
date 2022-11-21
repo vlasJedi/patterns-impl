@@ -18,12 +18,12 @@ public class THanoi {
         while(bars.get(0).peek() != -1) {
             bars.get(1).push(bars.get(0).peek(), bars.get(0), bars.get(2));
             bars.get(0).pop();
-        };
+        }
     }
 
     private class Bar {
         private final int id;
-        private final List<Integer> plates = new ArrayList<>();
+        private final Stack<Integer> plates = new Stack<>();
 
         public Bar(int id) {
             this.id = id;
@@ -34,21 +34,21 @@ public class THanoi {
         }
 
         public int peek() {
-            if (plates.size() == 0) {
+            if (plates.empty()) {
                 return -1;
             }
-            return plates.get(plates.size() - 1);
+            return plates.peek();
         }
 
         public boolean push(int newPlate, Bar pusherBar, Bar otherBar) {
-            if (plates.contains(newPlate)) {
+            if (plates.search(newPlate) != -1) {
                 System.out.printf("Bar %d already has this plate id %d, error\n", id, newPlate);
                 return false;
             }
             int platesNumberToReturn = 0;
             while(true) {
                 if (peek() < newPlate) {
-                    plates.add(newPlate);
+                    plates.push(newPlate);
                     if (pusherBar != null) System.out.printf("From bar %d -> to bar %d accepts new plate so new plates are %s\n", pusherBar.getId(), id, plates);
                     break;
                 }
@@ -78,18 +78,17 @@ public class THanoi {
                     return false;
                 }
                 platesNumberToReturn--;
-            };
+            }
             if (pusherBar != null) System.out.printf("From bar %d -> to bar %d plates are %s\n", pusherBar.getId(), id, plates);
             return true;
         }
 
         public boolean pop() {
-            if (plates.size() == 0) {
+            if (plates.empty()) {
                 System.out.println("Nothing to single pop");
                 return false;
             }
-            int plate = plates.get(plates.size() - 1);
-            plates.remove(plates.size() - 1);
+            plates.pop();
             return true;
         }
     }
