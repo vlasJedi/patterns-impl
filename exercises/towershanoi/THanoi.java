@@ -1,6 +1,8 @@
 package exercises.towershanoi;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 public class THanoi {
     private final List<Bar> bars = new ArrayList<>();

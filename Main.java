@@ -1,8 +1,4 @@
-import abstractfactory.AutoFactory;
-import abstractfactory.FactoryFor4DoorsAutos;
-import abstractfactory.Sedan4Doors;
-import bridgepattern.*;
-import exercises.towershanoi.THanoi;
+import exercises.binarytree.BinaryTreeArrayBased;
 
 public class Main {
     public static void main(String[] args) {
@@ -27,5 +23,19 @@ public class Main {
 //        dog2.bark();
 //        THanoi hanoi = new THanoi(3);
 //        hanoi.start();
+
+        BinaryTreeArrayBased tree = new BinaryTreeArrayBased();
+        tree.print();
+        tree.add(5);
+        tree.print();
+        tree.add(3);
+        tree.print();
+        tree.add(7);
+        tree.print();
+        tree.add(7);
+        tree.print();
+        tree.add(13);
+        tree.add(6);
+        tree.print();
     }
 }
