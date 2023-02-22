@@ -1,5 +1,9 @@
 import exercises.binarytree.BinaryTreeArrayBased;
 
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 public class Main {
     public static void main(String[] args) {
 //         composition > inheritance
@@ -30,12 +34,16 @@ public class Main {
         tree.print();
         tree.add(3);
         tree.print();
-        tree.add(7);
+        tree.add(2);
         tree.print();
-        tree.add(7);
-        tree.print();
-        tree.add(13);
-        tree.add(6);
-        tree.print();
+
+        // tree.traverseInOrder(0);
+//      AtomicInteger val = new AtomicInteger(-1);
+//      Consumer<Integer> callback = (index) -> val.getAndIncrement();
+//      tree.traversePreOrder(0, callback);
+        // System.out.println("*** Tree height is: " + tree.getHeight());
+        // tree.traversePostOrder(0);
+        tree.balanceTreeIfNeeded();
+
     }
 }
