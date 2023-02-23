@@ -29,14 +29,40 @@ public class Main {
 //        hanoi.start();
 
         BinaryTreeArrayBased tree = new BinaryTreeArrayBased();
-        tree.print();
-        tree.add(5);
-        tree.print();
-        tree.add(3);
-        tree.print();
-        tree.add(2);
-        tree.print();
+          // regular right.left rotations
+//        tree.print();
+//        tree.add(4);
+//        tree.print();
+//        tree.add(5);
+//        tree.print();
+//        tree.add(6);
+//        tree.print();
+//        tree.add(7);
+//        tree.add(3);
+//        tree.add(2);
+//        tree.add(1);
 
+        // regular right.left rotations
+        tree.print();
+//        tree.add(6);
+//        tree.print();
+//        tree.add(3);
+//        tree.print();
+//        tree.add(5);
+        tree.add(4);
+        tree.add(7);
+        tree.add(8);
+        tree.add(9);
+        tree.add(10);
+        tree.add(2);
+        tree.add(3);
+//        tree.add(10);
+//        tree.add(11);
+
+        tree.print();
+        //     4
+        //   2    6
+        // 1   3 5  7
         // tree.traverseInOrder(0);
 //      AtomicInteger val = new AtomicInteger(-1);
 //      Consumer<Integer> callback = (index) -> val.getAndIncrement();
@@ -44,6 +70,7 @@ public class Main {
         // System.out.println("*** Tree height is: " + tree.getHeight());
         // tree.traversePostOrder(0);
         tree.balanceTreeIfNeeded();
-
+        // left rotation balancing
+        tree.print();
     }
 }
