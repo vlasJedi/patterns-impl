@@ -29,7 +29,9 @@ public class BinaryTreeArrayBased {
         if (value <= 0) {
             return false;
         }
-        return insert(value, 0);
+        boolean res = insert(value, 0);
+        if (res) balanceTreeIfNeeded();
+        return res;
     }
 
     public int getHeight() {
@@ -52,105 +54,44 @@ public class BinaryTreeArrayBased {
         if (start >= nodes.length || nodes[start] == 0) {
             return 0;
         }
-        int leftHeight = calcHeightPostOrder(leftIndex(start));
-        int rightHeight = calcHeightPostOrder(rightIndex(start));
-        int res = leftHeight - rightHeight;
-        if (res > 1) {
-            int shouldLR = getTypeOfRotation(start);
-            if (shouldLR == 0) {
-                System.out.println("*** Need to balance left subtree for index: " + start + " as unbalanced");
-                doRightRotation(start);
-                System.out.println("*** Tree was balanced by right rotation");
-            } else {
-                System.out.println("*** Need to do left right rotation for index: " + start + " as unbalanced");
-                doLeftRightRotation(start);
-                System.out.println("*** Tree was balanced by left right rotation");
-            }
-            print();
+        int res = calcHeightPostOrder(leftIndex(start)) - calcHeightPostOrder(rightIndex(start));
+        if (res == 0) {
+            return 1;
         }
-        if (res < -1) {
-            int shouldRL = getTypeOfRotation(start);
-            if (shouldRL == 0) {
-                System.out.println("*** Need to balance right subtree for index: " + start + " as unbalanced");
-                doLeftRotation(start);
-                System.out.println("*** Tree was balanced by left rotation");
-            } else {
-                System.out.println("*** Need to do right left rotation for index: " + start + " as unbalanced");
-                doRightLeftRotation(start);
-                System.out.println("*** Tree was balanced by right left rotation");
-            }
-            print();
+        if (Math.abs(res) == 1) {
+            return Math.abs(res) + 1;
+        }
+        int shouldComplex = getTypeOfRotation(start);
+        if (shouldComplex == 0) {
+            doSimpleRotation(start, res < -1);
+        } else {
+            doComplexRotation(start, res > 1);
         }
         if (start == 0) return 0;
-        leftHeight = calcHeightPostOrder(leftIndex(start));
-        rightHeight = calcHeightPostOrder(rightIndex(start));
-        res = leftHeight - rightHeight;
+        res = calcHeightPostOrder(leftIndex(start)) - calcHeightPostOrder(rightIndex(start));
         return Math.abs(res) + 1;
     }
 
+    // L rot
     // counterclockwise direction, right skewed tree
     // 3(-2)              4
     //   4(-1)     ->  3     5
     //     5(0)
-    private void doLeftRotation(int indexStart) {
-        int swap = nodes[indexStart];
-        int rightIndex = rightIndex(indexStart);
-        nodes[indexStart] = nodes[rightIndex];
-        nodes[rightIndex] = nodes[rightIndex(rightIndex)];
-        nodes[rightIndex(rightIndex)] = 0;
-        //nodes[leftIndex(indexStart)] = swap;
-        shiftDownChildren(leftIndex(indexStart), swap, true);
-        shiftUpChildren(rightIndex(rightIndex));
-    }
-
-    private void shiftUpChildren(int newEmptyIndex) {
-        nodes[newEmptyIndex] = 0;
-        int leftChild = getChildIndexIfExists(newEmptyIndex, true);
-        int rightChild = getChildIndexIfExists(newEmptyIndex, false);
-        int newParent = getParent(newEmptyIndex);
-        if (leftChild != -1) {
-            nodes[leftIndex(newParent)] = nodes[leftChild];
-            shiftUpChildren(leftChild);
-        }
-        if (rightChild != -1) {
-            nodes[rightIndex(newParent)] = nodes[rightChild];
-            shiftUpChildren(rightChild);
-        }
-    }
-
-    private void shiftDownChildren(int start, int newValue, boolean toLeft) {
-        if (nodes.length <= start) nodes = realloc(start);
-        int swap = nodes[start];
-        if (swap == 0) {
-            nodes[start] = newValue;
-            return;
-        }
-        int childIndex = toLeft ? leftIndex(start) : rightIndex(start);
-
-        if (childIndex >= nodes.length) {
-            nodes = realloc(childIndex);
-        }
-        shiftDownChildren(childIndex, swap, toLeft);
-
-        int otherChild = getChildIndexIfExists(start, !toLeft);
-        if (otherChild == -1) return;
-
-        swap = nodes[otherChild];
-
-        shiftDownChildren(childIndex, swap, !toLeft);
-    }
-
-    // counterclockwise direction, right skewed tree
+    // R rot
+    // clockwise direction, left skewed tree
     //     5(2)           4
     //   4(1)     ->   3     5
     // 3(0)
-    private void doRightRotation(int indexStart) {
+    private void doSimpleRotation(int indexStart, boolean isLeft) {
         int swap = nodes[indexStart];
-        int leftIndex = leftIndex(indexStart);
-        nodes[indexStart] = nodes[leftIndex];
-        nodes[leftIndex] = nodes[leftIndex(leftIndex)];
-        nodes[leftIndex(leftIndex)] = 0;
-        nodes[rightIndex(indexStart)] = swap;
+        int childIndex = isLeft ? rightIndex(indexStart) : leftIndex(indexStart);
+        nodes[indexStart] = nodes[childIndex];
+        int childChildIndex = isLeft ? rightIndex(childIndex) : leftIndex(childIndex);
+        nodes[childIndex] = nodes[childChildIndex];
+        nodes[childChildIndex] = 0;
+        nodes[isLeft
+                ? leftIndex(indexStart)
+                : rightIndex(indexStart)] = swap;
     }
 
     //      LR       RL
@@ -188,41 +129,28 @@ public class BinaryTreeArrayBased {
         return childIndex < nodes.length && nodes[childIndex] != 0 ? childIndex : -1;
     }
 
-    //
+    //  LR
     //     6(2)          6        5
-    //   4(-1)     ->  5    -> 4     6
-    //     5(0)     4
-    private void doLeftRightRotation(int indexStart) {
-        int leftIndex = leftIndex(indexStart);
-        int swap = nodes[leftIndex];
-        nodes[leftIndex] = nodes[rightIndex(leftIndex)];
-        nodes[rightIndex(leftIndex)] = 0;
-        int leftLeftIndex = leftIndex(leftIndex);
-        // actually it will be allocated, but left for symmetry with RL
-        if (leftLeftIndex >= nodes.length) {
-            nodes = realloc(leftLeftIndex);
-        }
-        nodes[leftLeftIndex] = swap;
-        // regular right
-        doRightRotation(indexStart);
-    }
-
-    //
+    //  4(-1)     ->   5    -> 4     6
+    //    5(0)      4
+    //  RL
     //  4(-2)          4            5
-    //     6(1)     ->  5    -> 4     6
-    //   5(0)             6
-    private void doRightLeftRotation(int indexStart) {
-        int rightIndex = rightIndex(indexStart);
-        int swap = nodes[rightIndex];
-        nodes[rightIndex] = nodes[leftIndex(rightIndex)];
-        nodes[leftIndex(rightIndex)] = 0;
-        int rightRightIndex = rightIndex(rightIndex);
-        if (rightRightIndex >= nodes.length) {
-            nodes = realloc(rightRightIndex);
+    //     6(1)     ->   5    -> 4     6
+    //   5(0)              6
+    private void doComplexRotation(int indexStart, boolean isLR) {
+        int childIndex = isLR ? leftIndex(indexStart) : rightIndex(indexStart);
+        int swap = nodes[childIndex];
+        int childChildIndex = isLR ? rightIndex(childIndex) : leftIndex(childIndex);
+        nodes[childIndex] = nodes[childChildIndex];
+        nodes[childChildIndex] = 0;
+        int oppositeChildChildIndex = isLR ? leftIndex(childIndex) : rightIndex(childIndex);
+        // actually it will be allocated, but left for symmetry with RL
+        if (oppositeChildChildIndex >= nodes.length) {
+            nodes = realloc(oppositeChildChildIndex);
         }
-        nodes[rightRightIndex] = swap;
-        // regular left
-        doLeftRotation(indexStart);
+        nodes[oppositeChildChildIndex] = swap;
+        // regular right/left
+        doSimpleRotation(indexStart, !isLR);
     }
 
     private int getParent(int index) {
@@ -246,7 +174,7 @@ public class BinaryTreeArrayBased {
                 : insert(value, rightIndex(indexToCheck));
     }
 
-    public void balanceTreeIfNeeded() {
+    private void balanceTreeIfNeeded() {
         calcHeightPostOrder(0);
     }
 
