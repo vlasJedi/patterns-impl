@@ -1,5 +1,8 @@
 package exercises.linkedlists;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class LinkedLists {
 
      // Definition for singly-linked list.
@@ -11,6 +14,12 @@ public class LinkedLists {
          ListNode(int val, ListNode next) { this.val = val; this.next = next; }
      }
 
+    /**
+     * Lists are sorted in increasing order and order should be preserved
+     * @param list1
+     * @param list2
+     * @return
+     */
     public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
          if (list1 == null) return list2;
          if (list2 == null) return list1;
@@ -55,5 +64,55 @@ public class LinkedLists {
          ListNode child = reverseLinked(head.next);
          child.next = head;
          return head;
+    }
+
+    public ListNode middleNode(ListNode head) {
+         if (head.next == null) return head;
+         int count = 0;
+         ListNode cNode = head;
+         while(cNode != null) {
+             count++;
+             cNode = cNode.next;
+         }
+         int target = count / 2;
+         count = 0;
+         cNode = head;
+         while(true) {
+             if (target == count) return cNode;
+             count++;
+             cNode = cNode.next;
+         }
+    }
+
+    public ListNode detectCycle(ListNode head) {
+        if (head == null || head.next == null) return null;
+        ListNode cNode = head;
+        Set<ListNode> nodes = new HashSet<>();
+        nodes.add(cNode);
+        while(cNode.next != null) {
+            if (!nodes.contains(cNode.next)) {
+                nodes.add(cNode.next);
+                cNode = cNode.next;
+                continue;
+            }
+            return cNode.next;
+        }
+        return null;
+        // interesting solution by having two moving pointers
+        // if we have a cycle then somewhere they should intersect definitely
+//        public ListNode detectCycle(ListNode head) {
+//            ListNode slow = head, fast = head;
+//            while (fast != null && fast.next != null) {
+//                slow = slow.next;
+//                fast = fast.next.next;
+//                if (slow == fast) break;
+//            }
+//            if (fast == null || fast.next == null) return null;
+//            while (head != slow) {
+//                head = head.next;
+//                slow = slow.next;
+//            }
+//            return head;
+//        }
     }
 }
