@@ -1,5 +1,6 @@
 import exercises.binarytree.BinaryTreeArrayBased;
 import exercises.linkedlists.LinkedLists;
+import exercises.strings.StringEx;
 
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -30,9 +31,9 @@ public class Main {
 //        THanoi hanoi = new THanoi(3);
 //        hanoi.start();
 
-        BinaryTreeArrayBased tree = new BinaryTreeArrayBased();
-
-        tree.print();
+//        BinaryTreeArrayBased tree = new BinaryTreeArrayBased();
+//
+//        tree.print();
         // regular right.left rotations
 //        tree.add(4);
 //        tree.add(7);
@@ -63,24 +64,26 @@ public class Main {
 //        tree.add(5);
 //        tree.add(4);
 
-        tree.print();
+//        tree.print();
         // tree.traversePostOrder(0);
         // left rotation balancing
 
-        LinkedLists linkedLists = new LinkedLists();
-        int[] arr = new int[]{-10,-10,-9,-4,1,6,6};
-        LinkedLists.ListNode node0 = new LinkedLists.ListNode(arr[0]);
-        LinkedLists.ListNode node1 = node0;
-        for(int i = 1; i < arr.length; i++) {
-            node1.next = new LinkedLists.ListNode(arr[i]);
-            node1 = node1.next;
-        }
-        LinkedLists.ListNode node =
-                linkedLists.mergeTwoLists(node0, new LinkedLists.ListNode(-7));
-        while(node != null) {
-            System.out.println("*** Node" + node.val);
-            node = node.next;
-        }
-        System.out.println("*** End");
+//        LinkedLists linkedLists = new LinkedLists();
+//        int[] arr = new int[]{-10,-10,-9,-4,1,6,6};
+//        LinkedLists.ListNode node0 = new LinkedLists.ListNode(arr[0]);
+//        LinkedLists.ListNode node1 = node0;
+//        for(int i = 1; i < arr.length; i++) {
+//            node1.next = new LinkedLists.ListNode(arr[i]);
+//            node1 = node1.next;
+//        }
+//        LinkedLists.ListNode node =
+//                linkedLists.mergeTwoLists(node0, new LinkedLists.ListNode(-7));
+//        while(node != null) {
+//            System.out.println("*** Node" + node.val);
+//            node = node.next;
+//        }
+//        System.out.println("*** End");
+        StringEx stringEx = new StringEx();
+        stringEx.cosineSimilarity("word1 word2", "word2 word3");
     }
 }

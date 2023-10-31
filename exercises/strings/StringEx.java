@@ -1,7 +1,17 @@
 package exercises.strings;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class StringEx {
     // isomorphic strings
@@ -58,5 +68,33 @@ public class StringEx {
             }
         }
         return lastFoundIndex == (subSeq.length - 1);
+    }
+
+
+    public void cosineSimilarity(String s1, String s2) {
+        String[] words1 = s1.split("\\s");
+        String[] words2 = s2.split("\\s");
+        // build vector size
+        Set<String> vocal = Stream.of(words1, words2).flatMap(Stream::of).collect(Collectors.toSet());
+        Map<String, Integer> dictOfWordCounts1 = vocal.stream().collect(Collectors.toMap((word) -> word, (word) -> 0));
+        Arrays.stream(words1).forEach(word -> {
+            dictOfWordCounts1.put(word, dictOfWordCounts1.get(word) + 1);
+        });
+        Map<String, Integer> dictOfWordCounts2 = vocal.stream().collect(Collectors.toMap((word) -> word, (word) -> 0));
+        Arrays.stream(words2).forEach(word -> {
+            dictOfWordCounts2.put(word, dictOfWordCounts2.get(word) + 1);
+        });
+        System.out.printf("Vocabular set from two string: %s%n", vocal);
+        Double similarity = dotProduct(dictOfWordCounts1, dictOfWordCounts2, vocal)
+                / (vectorLength(dictOfWordCounts1) * vectorLength(dictOfWordCounts2));
+        System.out.printf("Cosine similarity is: %s%n", similarity);
+    }
+
+    private Integer dotProduct(Map<String, Integer> dict1, Map<String, Integer> dict2, Set<String> vocal) {
+        return vocal.stream().map(word -> dict1.get(word) * dict2.get(word)).reduce(0, Integer::sum);
+    }
+
+    private Double vectorLength(Map<String, Integer> dict1) {
+        return Math.sqrt(dict1.values().stream().map(count -> count * count).reduce(0, Integer::sum));
     }
 }
