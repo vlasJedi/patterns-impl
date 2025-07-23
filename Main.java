@@ -1,5 +1,6 @@
 import exercises.binarytree.BinaryTreeArrayBased;
 import exercises.linkedlists.LinkedLists;
+import exercises.streams.StreamAPI;
 import exercises.strings.StringEx;
 
 import java.util.LinkedList;
@@ -83,7 +84,9 @@ public class Main {
 //            node = node.next;
 //        }
 //        System.out.println("*** End");
-        StringEx stringEx = new StringEx();
-        stringEx.cosineSimilarity("word1 word2", "word2 word3");
+//        StringEx stringEx = new StringEx();
+//        stringEx.cosineSimilarity("word1 word2", "word2 word3");
+        StreamAPI streamAPI = new StreamAPI();
+        streamAPI.run();
     }
 }
